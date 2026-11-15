@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backoffice SUPER_ADMIN & Antifraude</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#07090f] text-slate-100 min-h-screen font-sans">
+
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#0f1420] border border-red-500/40 rounded-xl p-8 space-y-4 shadow-2xl">
+      <div class="text-center">
+        <span class="text-[11px] font-mono text-red-400 uppercase tracking-widest">Restricted Backoffice // SUPER_ADMIN</span>
+        <h1 class="text-xl font-bold mt-1">Security Gate + 2FA</h1>
+      </div>
+      <div id="loginErr" class="hidden p-3 bg-red-950/70 border border-red-500 text-red-300 text-xs rounded"></div>
+      <div>
+        <label class="text-xs text-slate-400">E-mail (admin@cyberminer.local)</label>
+        <input id="admEmail" value="admin@cyberminer.local" class="w-full mt-1 bg-[#07090f] border border-slate-700 rounded px-3 py-2 text-sm" />
+      </div>
+      <div>
+        <label class="text-xs text-slate-400">Senha (Admin@Cyber2026!)</label>
+        <input id="admPass" type="password" value="Admin@Cyber2026!" class="w-full mt-1 bg-[#07090f] border border-slate-700 rounded px-3 py-2 text-sm" />
+      </div>
+      <div>
+        <label class="text-xs text-slate-400">Código 2FA (digite 6 dígitos, ex: 123456)</label>
+        <input id="adm2fa" value="123456" maxlength="6" class="w-full mt-1 bg-[#07090f] border border-cyan-500/50 rounded px-3 py-2 text-center font-mono tracking-widest text-cyan-300" />
+      </div>
+      <button onclick="doAdminLogin()" class="w-full py-2.5 bg-red-600 hover:bg-red-500 rounded font-bold text-sm">
+        Autenticar no Painel
+      </button>
+    </div>
+  </div>
+
+  <div id="adminApp" class="hidden min-h-screen flex flex-col md:flex-row">
+    <aside class="w-full md:w-64 bg-[#0f1420] border-r border-slate-800 p-5 space-y-2">
+      <div class="pb-4 border-b border-slate-800">
+        <p class="text-xs font-mono text-red-400">SUPER_ADMIN // 2FA OK</p>
+        <h2 class="font-bold text-lg">CyberMiner Ops</h2>
+      </div>
+      <button onclick="admTab('finance')" class="w-full text-left px-3 py-2 rounded bg-slate-800 text-sm">📊 Finanças & Anúncios</button>
+      <button onclick="admTab('fraud')" class="w-full text-left px-3 py-2 rounded hover:bg-slate-800 text-sm">🛡️ Central Antifraude</button>
+      <button onclick="admTab('withdraws')" class="w-full text-left px-3 py-2 rounded hover:bg-slate-800 text-sm">💸 Saques & Raio-X (<span id="pendCount">2</span>)</button>
+      <button onclick="admTab('economy')" class="w-full text-left px-3 py-2 rounded hover:bg-slate-800 text-sm">🪙 Moedas, Overclock & Loja</button>
+    </aside>
+
+    <main class="flex-1 p-6 space-y-6">
+
+      <section id="adm-finance" class="space-y-6">
+        <h2 class="text-2xl font-bold">Balanço Financeiro em Tempo Real</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-[#0f1420] p-4 rounded-xl border border-slate-800">
+            <p class="text-xs text-slate-400">Receita Offerwalls (USD)</p>
+            <p class="text-2xl font-mono text-emerald-400 mt-1">$14,820.50</p>
+          </div>
+          <div class="bg-[#0f1420] p-4 rounded-xl border border-slate-800">
+            <p class="text-xs text-slate-400">Depósitos vs Saques Pagos</p>
+            <p class="text-lg font-mono text-cyan-400 mt-1">$9,400 / $4,120</p>
+          </div>
+          <div class="bg-[#0f1420] p-4 rounded-xl border border-slate-800">
+            <p class="text-xs text-slate-400">Taxas P2P (5%)</p>
+            <p class="text-2xl font-mono text-purple-400 mt-1">1,245 RLT</p>
+          </div>
+          <div class="bg-[#0f1420] p-4 rounded-xl border border-slate-800">
+            <p class="text-xs text-slate-400">Lucro Líquido Estimado</p>
+            <p class="text-2xl font-mono text-amber-400 mt-1">$10,700.50</p>
+          </div>
+        </div>
+
+        <div class="bg-[#0f1420] p-5 rounded-xl border border-slate-800 space-y-3">
+          <h3 class="font-bold">Gestor de Provedores Offerwall</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 bg-[#07090f] rounded border border-slate-800 flex justify-between items-center">
+              <div><b>BitLabs</b><p class="text-slate-400">Repasse: 60% • $5,400</p></div>
+              <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded">ATIVO</span>
+            </div>
+            <div class="p-3 bg-[#07090f] rounded border border-slate-800 flex justify-between items-center">
+              <div><b>TimeWall</b><p class="text-slate-400">Repasse: 65% • $4,110</p></div>
+              <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded">ATIVO</span>
+            </div>
+            <div class="p-3 bg-[#07090f] rounded border border-slate-800 flex justify-between items-center">
+              <div><b>CPX Research</b><p class="text-slate-400">Repasse: 55% • $5,310</p></div>
+              <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded">ATIVO</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="adm-fraud" class="hidden space-y-5">
+        <h2 class="text-2xl font-bold">Central Antifraude (Sybil, Bots & Chargebacks)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-[#0f1420] p-4 rounded-xl border border-red-500/50 space-y-2">
+            <span class="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs font-bold rounded">VERMELHO :: SYBIL DETECTADO</span>
+            <p class="text-sm font-semibold">4 Contas com mesmo Device Fingerprint</p>
+            <p class="text-xs text-slate-400 font-mono">FP: 9f8a21...c4b • IP: 187.44.12.9</p>
+            <button onclick="alert('Cluster banido e registrado no AuditLog!')" class="w-full py-1.5 bg-red-600 rounded text-xs font-bold">Banir Todas em 1 Clique</button>
+          </div>
+          <div class="bg-[#0f1420] p-4 rounded-xl border border-amber-500/50 space-y-2">
+            <span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-bold rounded">AMARELO :: AUTOCLICKER</span>
+            <p class="text-sm font-semibold">@MinerBot99 (CoinClick)</p>
+            <p class="text-xs text-slate-400">Desvio padrão de cliques: 2.1ms (sobre-humano)</p>
+            <button onclick="alert('Poder temporário confiscado!')" class="w-full py-1.5 bg-amber-600 rounded text-xs font-bold">Confiscar Poder</button>
+          </div>
+          <div class="bg-[#0f1420] p-4 rounded-xl border border-red-500/50 space-y-2">
+            <span class="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs font-bold rounded">CHARGEBACK :: BITLABS</span>
+            <p class="text-sm font-semibold">@FakeUser77 estornou $12.00</p>
+            <p class="text-xs text-slate-400">Oferta revertida pelo anunciante</p>
+            <button onclick="alert('Saldo deduzido automaticamente!')" class="w-full py-1.5 bg-red-600 rounded text-xs font-bold">Deduzir RLT & Banir</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="adm-withdraws" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 bg-[#0f1420] p-4 rounded-xl border border-slate-800 space-y-3">
+          <h3 class="font-bold">Fila PENDING</h3>
+          <button onclick="loadXray(0)" class="w-full text-left p-3 bg-[#07090f] rounded border border-slate-700 hover:border-cyan-400 flex justify-between">
+            <span><b>@CyberLucas</b><br><small class="text-slate-400">SOL • 0x91a...f2</small></span>
+            <span class="text-emerald-400 font-mono text-sm">1.45 SOL</span>
+          </button>
+          <button onclick="loadXray(1)" class="w-full text-left p-3 bg-[#07090f] rounded border border-slate-700 hover:border-red-400 flex justify-between">
+            <span><b>@FarmAccount04</b><br><small class="text-slate-400">USDT • TQx8...11</small></span>
+            <span class="text-red-400 font-mono text-sm">85.00 USDT</span>
+          </button>
+        </div>
+        <div id="xrayPanel" class="lg:col-span-7 bg-[#0f1420] p-5 rounded-xl border border-slate-800 space-y-4">
+          <p class="text-sm text-slate-400">Clique em um pedido de saque para abrir o Raio-X completo.</p>
+        </div>
+      </section>
+
+      <section id="adm-economy" class="hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-[#0f1420] p-5 rounded-xl border border-slate-800 space-y-3">
+            <h3 class="font-bold text-cyan-400">🪙 Lançar Nova Criptomoeda (Sem mexer em código)</h3>
+            <input id="newCoinCode" placeholder="Sigla (ex: PEPE, TON, PTS)" class="w-full bg-[#07090f] border border-slate-700 rounded px-3 py-2 text-sm" />
+            <input id="newCoinReward" placeholder="Block Reward a cada 10 min (ex: 500)" class="w-full bg-[#07090f] border border-slate-700 rounded px-3 py-2 text-sm" />
+            <button onclick="addCoin()" class="w-full py-2 bg-cyan-600 hover:bg-cyan-500 rounded font-bold text-sm">Adicionar Moeda ao Jogo</button>
+            <div id="coinList" class="text-xs text-slate-300 pt-2 space-y-1">
+              <div>• <b>RLT</b> (Moeda Principal Loja) — 50 / bloco</div>
+              <div>• <b>BTC</b> (Saque Ativo) — 0.0005 / bloco</div>
+            </div>
+          </div>
+          <div class="bg-[#0f1420] p-5 rounded-xl border border-slate-800 space-y-3">
+            <h3 class="font-bold text-amber-400">⚡ Configurar Mineração Duplicada Paga (Overclock)</h3>
+            <label class="text-xs text-slate-400 block">Multiplicador (ex: 2.0)</label>
+            <input value="2.0" class="w-full bg-[#07090f] border border-slate-700 rounded px-3 py-2 text-sm" />
+            <label class="text-xs text-slate-400 block">Valor cobrado do jogador (em RLT)</label>
+            <input value="3.0" class="w-full bg-[#07090f] border border-slate-700 rounded px-3 py-2 text-sm" />
+            <button onclick="alert('Configuração de Overclock 2x salva e auditada!')" class="w-full py-2 bg-amber-600 hover:bg-amber-500 rounded font-bold text-sm">Salvar Regras Overclock</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    let fails = 0;
+    function doAdminLogin() {
+      const e = document.getElementById('admEmail').value;
+      const p = document.getElementById('admPass').value;
+      const t = document.getElementById('adm2fa').value;
+      const err = document.getElementById('loginErr');
+
+      if (fails >= 3) {
+        err.classList.remove('hidden');
+        err.innerText = 'Conta bloqueada após 3 tentativas incorretas!';
+        return;
+      }
+      if (e !== 'admin@cyberminer.local' || p !== 'Admin@Cyber2026!') {
+        fails++;
+        err.classList.remove('hidden');
+        err.innerText = fails >= 3 ? '3ª tentativa falha! Conta bloqueada.' : `Senha incorreta. Restam ${3 - fails} tentativas.`;
+        return;
+      }
+      if (!/^\d{6}$/.test(t)) {
+        err.classList.remove('hidden');
+        err.innerText = 'Informe os 6 dígitos do 2FA!';
+        return;
+      }
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminApp').classList.remove('hidden');
+    }
+
+    function admTab(t) {
+      ['finance','fraud','withdraws','economy'].forEach(x => {
+        document.getElementById('adm-' + x).classList.toggle('hidden', x !== t);
+      });
+    }
+
+    const xrays = [
+      { user: '@CyberLucas', risk: 'VERDE (12/100)', cls: 'text-emerald-400', ads: '42.00 RLT', games: '28 vitórias', msg: 'Nenhuma conta vinculada. Jogador legítimo.' },
+      { user: '@FarmAccount04', risk: 'VERMELHO (92/100)', cls: 'text-red-400', ads: '0.00 RLT', games: '190 vitórias (24h seguidas)', msg: 'Mesma carteira de saque de outras 3 contas + Autoclicker!' }
+    ];
+
+    function loadXray(idx) {
+      const x = xrays[idx];
+      document.getElementById('xrayPanel').innerHTML = `
+        <div class="flex justify-between items-center">
+          <h3 class="text-xl font-bold">${x.user}</h3>
+          <span class="font-bold text-sm ${x.cls}">RISCO ${x.risk}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="p-3 bg-[#07090f] rounded">Offerwalls: <b>${x.ads}</b></div>
+          <div class="p-3 bg-[#07090f] rounded">Mini-Games: <b>${x.games}</b></div>
+        </div>
+        <div class="p-3 bg-[#07090f] rounded border border-slate-800 text-xs">${x.msg}</div>
+        <div class="flex gap-3">
+          <button onclick="alert('Pagamento Aprovado e Auditado!')" class="flex-1 py-2.5 bg-emerald-600 rounded font-bold text-sm">✓ Aprovar Pagamento</button>
+          <button onclick="alert('Saque Rejeitado e Conta Banida!')" class="flex-1 py-2.5 bg-red-600 rounded font-bold text-sm">✕ Rejeitar & Banir</button>
+        </div>`;
+    }
+
+    function addCoin() {
+      const c = document.getElementById('newCoinCode').value.toUpperCase();
+      const r = document.getElementById('newCoinReward').value;
+      if (!c || !r) return;
+      document.getElementById('coinList').innerHTML += `<div>• <b>${c}</b> (Nova Moeda) — ${r} / bloco</div>`;
+    }
+  </script>
+</body>
+</html>
