@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberMiner 8-Bit — Site do Jogador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body { background: #0b0e17; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+    .font-pixel { font-family: 'Press Start 2P', monospace; }
+    .neon-cyan { border: 2px solid #00f2fe; box-shadow: 0 0 12px rgba(0,242,254,0.3); }
+    .neon-purple { border: 2px solid #7b2cbf; box-shadow: 0 0 14px rgba(123,44,191,0.4); }
+    canvas { image-rendering: pixelated; }
+  </style>
+</head>
+<body class="min-h-screen pb-12">
+
+  <header class="border-b border-slate-800 bg-[#0e1322]/90 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded bg-[#00f2fe] text-[#0b0e17] font-pixel text-xs flex items-center justify-center">₿</div>
+        <span class="font-pixel text-xs md:text-sm text-[#00f2fe]">CYBERMINER<span class="text-purple-400">.8BIT</span></span>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs">
+        <button onclick="showTab('room')" class="px-3 py-2 rounded bg-[#00f2fe] text-[#0b0e17] font-pixel text-[10px]">SALA</button>
+        <button onclick="showTab('games')" class="px-3 py-2 rounded bg-slate-800 text-slate-300 font-pixel text-[10px]">MINI-GAMES</button>
+        <button onclick="showTab('store')" class="px-3 py-2 rounded bg-slate-800 text-slate-300 font-pixel text-[10px]">LOJA & P2P</button>
+        <button onclick="showTab('earn')" class="px-3 py-2 rounded bg-slate-800 text-slate-300 font-pixel text-[10px]">EARN / ADS</button>
+        <button onclick="showTab('wallet')" class="px-3 py-2 rounded bg-slate-800 text-slate-300 font-pixel text-[10px]">CARTEIRA</button>
+      </nav>
+      <div class="bg-[#0b0e17] px-3 py-1.5 rounded border border-cyan-500/40 font-pixel text-[11px] text-[#00f2fe]">
+        <span id="rltBalance">50.00</span> RLT
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 mt-6 space-y-6">
+
+    <section id="tab-room" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-[#111625] p-4 rounded-xl neon-cyan">
+          <p class="text-xs text-slate-400">MY POWER</p>
+          <p id="myPowerTxt" class="font-pixel text-base text-[#00f2fe] mt-2">2.400 TH/s</p>
+          <span id="boostBadge" class="hidden inline-block mt-1 px-2 py-0.5 bg-amber-500/20 text-amber-300 font-pixel text-[9px] rounded">⚡ OVERCLOCK 2X ATIVO</span>
+        </div>
+        <div class="bg-[#111625] p-4 rounded-xl neon-purple">
+          <p class="text-xs text-slate-400">NETWORK POWER</p>
+          <p class="font-pixel text-base text-purple-300 mt-2">485.20 PH/s</p>
+        </div>
+        <div class="bg-[#111625] p-4 rounded-xl border border-slate-700">
+          <p class="text-xs text-slate-400">BLOCK REWARD (10M)</p>
+          <p id="blockTimer" class="font-pixel text-base text-emerald-400 mt-2">09:45</p>
+        </div>
+        <div class="bg-[#111625] p-4 rounded-xl border border-slate-700 flex flex-col justify-between">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-400">ELETRICIDADE</span>
+            <span id="elecTxt" class="font-pixel text-amber-400">65%</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-800 rounded overflow-hidden my-2">
+            <div id="elecBar" class="h-full bg-gradient-to-r from-amber-500 to-[#00f2fe]" style="width: 65%"></div>
+          </div>
+          <button onclick="rechargeElec()" class="w-full py-1.5 bg-[#00f2fe] text-[#0b0e17] font-pixel text-[10px] rounded hover:brightness-110">
+            ⚡ RECHARGE (24H)
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-[#111625] p-4 rounded-xl border border-slate-800">
+        <div class="flex items-center gap-3">
+          <button onclick="activateBoost()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-pink-500 text-white font-pixel text-[10px] rounded shadow-lg hover:scale-105 transition">
+            🚀 ATIVAR MINERAÇÃO 2X (3 RLT / 24h)
+          </button>
+        </div>
+        <div class="flex items-center gap-2 text-xs flex-wrap">
+          <span class="text-slate-400">Papel de Parede:</span>
+          <button onclick="setWallpaper('cyber')" class="px-2.5 py-1 rounded bg-slate-800 border border-cyan-500/40">Cyber Padrão</button>
+          <button onclick="setWallpaper('tokyo')" class="px-2.5 py-1 rounded bg-purple-950 border border-purple-500">Tóquio Neon</button>
+          <button onclick="setWallpaper('matrix')" class="px-2.5 py-1 rounded bg-emerald-950 border border-emerald-500">Matrix Verde</button>
+        </div>
+      </div>
+
+      <div class="rounded-xl overflow-hidden neon-cyan bg-[#0e1322] p-2">
+        <canvas id="roomCanvas" width="760" height="290" class="w-full h-auto rounded"></canvas>
+      </div>
+
+      <div class="bg-[#111625] p-5 rounded-xl neon-purple">
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="font-pixel text-xs text-[#00f2fe]">SPLIT POWER (DIVISÃO DE MINERAÇÃO)</h2>
+          <span class="text-xs text-slate-400">Total: <b id="splitTotal" class="text-emerald-400">100%</b></span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3" id="splitGrid"></div>
+      </div>
+    </section>
+
+    <section id="tab-games" class="hidden space-y-5">
+      <div class="bg-[#111625] border border-dashed border-purple-500 p-3 rounded text-center text-xs text-purple-300">
+        [BANNER TOPO :: A-ADS / COINZILLA 728x90 — PROTEGIDO POR ANTI-ADBLOCK]
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div class="lg:col-span-2 bg-[#111625] border border-dashed border-cyan-500/50 rounded p-3 flex items-center justify-center text-center text-xs text-cyan-300">
+          SLOT LATERAL<br>BITMEDIA
+        </div>
+        <div class="lg:col-span-8 bg-[#111625] p-4 rounded-xl neon-cyan space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="font-pixel text-xs text-[#00f2fe]">COINCLICK (JOGÁVEL AGORA!)</h3>
+            <button onclick="startCoinClick()" class="px-4 py-1.5 bg-[#00f2fe] text-[#0b0e17] font-pixel text-[10px] rounded">INICIAR PARTIDA</button>
+          </div>
+          <canvas id="gameCanvas" width="540" height="300" class="w-full bg-[#0b0e17] rounded border border-slate-800 cursor-crosshair"></canvas>
+          <p id="gameStatus" class="font-pixel text-[10px] text-emerald-400">Clique nas moedas ciano e desvie das bombas vermelhas!</p>
+        </div>
+        <div class="lg:col-span-2 bg-[#111625] border border-dashed border-purple-500/50 rounded p-3 flex items-center justify-center text-center text-xs text-purple-300">
+          SLOT LATERAL<br>ADSTERRA
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-store" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-[#111625] p-5 rounded-xl neon-cyan space-y-3">
+          <span class="text-[10px] font-pixel text-cyan-300">LOJA OFICIAL</span>
+          <h3 class="font-bold text-lg">CyberMiner X900</h3>
+          <p class="text-xs text-slate-400">+2.500 TH/s permanentes na estante</p>
+          <button onclick="buyMiner(15, 2500)" class="w-full py-2 bg-[#00f2fe] text-[#0b0e17] font-pixel text-[10px] rounded">COMPRAR POR 15 RLT</button>
+        </div>
+        <div class="bg-[#111625] p-5 rounded-xl neon-purple space-y-3">
+          <span class="text-[10px] font-pixel text-purple-300">MARKETPLACE P2P (TAXA 5%)</span>
+          <h3 class="font-bold text-lg">Vendedor: @NakamotoBR</h3>
+          <p class="text-xs text-slate-400">Rack + Miner Usada (+1.800 TH/s)</p>
+          <button onclick="buyMiner(12, 1800)" class="w-full py-2 bg-[#7b2cbf] text-white font-pixel text-[10px] rounded">COMPRAR P2P • 12 RLT</button>
+        </div>
+        <div class="bg-[#111625] p-5 rounded-xl border border-amber-500/50 space-y-3">
+          <span class="text-[10px] font-pixel text-amber-300">PAPEL DE PAREDE</span>
+          <h3 class="font-bold text-lg">Skin Tóquio Neon</h3>
+          <p class="text-xs text-slate-400">Desbloqueia fundo animado +2% bônus</p>
+          <button onclick="setWallpaper('tokyo'); showTab('room')" class="w-full py-2 bg-amber-400 text-[#0b0e17] font-pixel text-[10px] rounded">TESTAR NA SALA</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-earn" class="hidden space-y-6">
+      <div class="bg-[#111625] p-5 rounded-xl neon-purple space-y-4">
+        <h2 class="font-pixel text-xs text-[#00f2fe]">PROVEDORES DE OFFERWALL (POSTBACK S2S)</h2>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 text-center text-xs font-bold">
+          <div class="p-4 bg-[#0b0e17] rounded border border-slate-700">BitLabs</div>
+          <div class="p-4 bg-[#0b0e17] rounded border border-slate-700">TimeWall</div>
+          <div class="p-4 bg-[#0b0e17] rounded border border-slate-700">CPX Research</div>
+          <div class="p-4 bg-[#0b0e17] rounded border border-slate-700">Lootably</div>
+          <div class="p-4 bg-[#0b0e17] rounded border border-slate-700">Monlix</div>
+          <div class="p-4 bg-[#0b0e17] rounded border border-slate-700">AdGate Media</div>
+        </div>
+      </div>
+      <div class="bg-[#111625] p-5 rounded-xl neon-cyan flex flex-wrap justify-between items-center gap-4">
+        <div>
+          <h3 class="font-pixel text-xs text-white">ANÚNCIO PTC PATROCINADO (15 SEG)</h3>
+          <p class="text-xs text-slate-400 mt-1">Ganhe +2.50 RLT mantendo a aba ativa.</p>
+        </div>
+        <button onclick="claimPtc()" class="px-4 py-2 bg-[#7b2cbf] text-white font-pixel text-[10px] rounded">SIMULAR PTC (+2.50 RLT)</button>
+      </div>
+    </section>
+
+    <section id="tab-wallet" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-[#111625] p-5 rounded-xl neon-cyan space-y-4">
+        <h2 class="font-pixel text-xs text-[#00f2fe]">SOLICITAR SAQUE (FILA PENDING)</h2>
+        <input id="withdrawAddr" type="text" placeholder="Endereço da Carteira (BTC/SOL/USDT)" class="w-full bg-[#0b0e17] border border-slate-700 rounded px-3 py-2 text-sm" />
+        <input id="withdrawAmt" type="number" placeholder="Valor" class="w-full bg-[#0b0e17] border border-slate-700 rounded px-3 py-2 text-sm" />
+        <button onclick="alert('Saque enviado com status PENDING para auditoria no Painel Admin!')" class="w-full py-2.5 bg-[#00f2fe] text-[#0b0e17] font-pixel text-[10px] rounded">
+          SOLICITAR SAQUE
+        </button>
+      </div>
+      <div class="bg-[#111625] p-5 rounded-xl neon-purple space-y-3">
+        <h2 class="font-pixel text-xs text-purple-300">PROGRAMA DE AFILIADOS</h2>
+        <p class="text-xs text-slate-300">Ganhe <b>25%</b> da mineração e <b>15%</b> das compras dos seus indicados.</p>
+        <div class="p-3 bg-[#0b0e17] rounded border border-slate-700 font-mono text-xs text-[#00f2fe]">
+          https://cyberminer.com/?ref=PLAYER01
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let rlt = 50.0, powerGHs = 2400, boost = 1, elec = 65, wallpaper = 'cyber', minersCount = 6;
+    const coins = [
+      { code: 'RLT', pct: 60, color: '#00f2fe' },
+      { code: 'BTC', pct: 20, color: '#f7931a' },
+      { code: 'DOGE', pct: 10, color: '#c2a633' },
+      { code: 'ETH', pct: 10, color: '#627eea' },
+      { code: 'SOL', pct: 0, color: '#14f195' },
+      { code: 'USDT', pct: 0, color: '#26a17b' },
+    ];
+
+    function updateHud() {
+      document.getElementById('rltBalance').innerText = rlt.toFixed(2);
+      const eff = (elec > 0 ? powerGHs : 0) * boost;
+      document.getElementById('myPowerTxt').innerText = (eff / 1000).toFixed(3) + ' TH/s';
+      document.getElementById('elecTxt').innerText = elec + '%';
+      document.getElementById('elecBar').style.width = elec + '%';
+    }
+
+    function showTab(name) {
+      ['room','games','store','earn','wallet'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('hidden', t !== name);
+      });
+    }
+
+    function rechargeElec() { elec = 100; updateHud(); }
+    function activateBoost() {
+      if (rlt < 3) return alert('RLT insuficiente!');
+      rlt -= 3; boost = 2;
+      document.getElementById('boostBadge').classList.remove('hidden');
+      updateHud();
+    }
+    function setWallpaper(w) { wallpaper = w; }
+    function buyMiner(cost, pwr) {
+      if (rlt < cost) return alert('Saldo insuficiente!');
+      rlt -= cost; powerGHs += pwr; minersCount = Math.min(16, minersCount + 2);
+      updateHud(); alert('Mineradora adicionada à sua sala!'); showTab('room');
+    }
+    function claimPtc() { rlt += 2.5; updateHud(); alert('+2.50 RLT creditados!'); }
+
+    const splitGrid = document.getElementById('splitGrid');
+    coins.forEach((c, idx) => {
+      splitGrid.innerHTML += `
+        <div class="bg-[#0b0e17] p-3 rounded border border-slate-800">
+          <span class="font-pixel text-[10px]" style="color:${c.color}">${c.code}</span>
+          <input type="number" min="0" max="100" value="${c.pct}" onchange="coins[${idx}].pct=Number(this.value); recalcSplit()"
+            class="w-full mt-2 bg-slate-900 border border-slate-700 rounded px-2 py-1 font-pixel text-xs text-white" />
+        </div>`;
+    });
+    function recalcSplit() {
+      const sum = coins.reduce((a, b) => a + b.pct, 0);
+      const el = document.getElementById('splitTotal');
+      el.innerText = sum + '%';
+      el.className = sum === 100 ? 'text-emerald-400' : 'text-red-400';
+    }
+
+    let sec = 585;
+    setInterval(() => {
+      sec = sec <= 1 ? 600 : sec - 1;
+      document.getElementById('blockTimer').innerText =
+        String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
+    }, 1000);
+
+    const rCanvas = document.getElementById('roomCanvas');
+    const rCtx = rCanvas.getContext('2d');
+    let tick = 0;
+    function drawRoom() {
+      tick++;
+      const bg = wallpaper === 'tokyo' ? '#190b28' : wallpaper === 'matrix' ? '#041a0e' : '#0e1322';
+      const accent = wallpaper === 'tokyo' ? '#e879f9' : wallpaper === 'matrix' ? '#22c55e' : '#00f2fe';
+      rCtx.fillStyle = bg;
+      rCtx.fillRect(0, 0, rCanvas.width, rCanvas.height);
+
+      rCtx.fillStyle = '#121a30';
+      rCtx.fillRect(0, 215, rCanvas.width, 75);
+      rCtx.fillStyle = '#090d16'; rCtx.fillRect(30, 30, 110, 80);
+      rCtx.strokeStyle = accent; rCtx.strokeRect(30, 30, 110, 80);
+      rCtx.fillStyle = '#263147'; rCtx.fillRect(45, 190, 100, 12);
+      rCtx.fillStyle = accent; rCtx.fillRect(72, 156, 40, 28);
+      rCtx.fillStyle = '#0b0e17'; rCtx.fillRect(76, 160, 32, 20);
+      rCtx.fillStyle = tick % 25 < 12 ? accent : '#fff'; rCtx.fillRect(80, 166, 20, 3);
+      rCtx.fillStyle = '#fbd38d'; rCtx.fillRect(86, 174, 20, 20);
+      rCtx.fillStyle = '#7b2cbf'; rCtx.fillRect(84, 170, 24, 7);
+
+      let drawn = 0;
+      for (let i = 0; i < 4; i++) {
+        const rx = 195 + i * 135;
+        rCtx.fillStyle = '#1e293b'; rCtx.fillRect(rx, 55, 115, 175);
+        rCtx.strokeStyle = boost > 1 ? '#f59e0b' : accent;
+        rCtx.strokeRect(rx, 55, 115, 175);
+        for (let s = 0; s < 4; s++) {
+          const sy = 67 + s * 40;
+          rCtx.fillStyle = '#0f172a'; rCtx.fillRect(rx + 6, sy, 103, 32);
+          if (drawn < minersCount) {
+            drawn++;
+            rCtx.fillStyle = '#334155'; rCtx.fillRect(rx + 10, sy + 4, 95, 24);
+            const blink = (tick + i * 5 + s * 9) % (boost > 1 ? 10 : 24) < (boost > 1 ? 5 : 12);
+            rCtx.fillStyle = elec > 0 ? (blink ? accent : '#22c55e') : '#ef4444';
+            rCtx.fillRect(rx + 88, sy + 10, 7, 7);
+          }
+        }
+      }
+      requestAnimationFrame(drawRoom);
+    }
+    drawRoom();
+
+    let gRunning = false;
+    function startCoinClick() {
+      if (gRunning) return;
+      gRunning = true;
+      const c = document.getElementById('gameCanvas'), ctx = c.getContext('2d');
+      let score = 0, time = 15, items = [];
+      const spawner = setInterval(() => {
+        items.push({ x: 20 + Math.random() * 500, y: -15, vy: 2.5 + Math.random() * 2, bomb: Math.random() < 0.25 });
+      }, 450);
+      const timer = setInterval(() => {
+        time--;
+        if (time <= 0) {
+          clearInterval(spawner); clearInterval(timer); gRunning = false;
+          c.onclick = null;
+          if (score >= 100) {
+            powerGHs += 400; updateHud();
+            document.getElementById('gameStatus').innerText = `VITÓRIA (${score} pts)! +400 GH/s adicionados à sala!`;
+          } else {
+            document.getElementById('gameStatus').innerText = `Fim de jogo (${score} pts). Faça 100+ pts para ganhar poder!`;
+          }
+        }
+      }, 1000);
+
+      c.onclick = (e) => {
+        const rect = c.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (c.width / rect.width);
+        const my = (e.clientY - rect.top) * (c.height / rect.height);
+        for (let i = items.length - 1; i >= 0; i--) {
+          if (Math.hypot(mx - items[i].x, my - items[i].y) < 22) {
+            score = items[i].bomb ? Math.max(0, score - 50) : score + 25;
+            items.splice(i, 1);
+            break;
+          }
+        }
+      };
+
+      function gLoop() {
+        if (!gRunning) return;
+        ctx.fillStyle = '#0b0e17'; ctx.fillRect(0, 0, c.width, c.height);
+        for (let i = items.length - 1; i >= 0; i--) {
+          const it = items[i]; it.y += it.vy;
+          ctx.fillStyle = it.bomb ? '#ef4444' : '#00f2fe';
+          ctx.beginPath(); ctx.arc(it.x, it.y, 14, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#0b0e17'; ctx.font = 'bold 12px monospace';
+          ctx.fillText(it.bomb ? 'X' : '₿', it.x - 4, it.y + 4);
+        }
+        ctx.fillStyle = '#fff'; ctx.font = '14px monospace';
+        ctx.fillText(`SCORE: ${score}  |  TEMPO: ${time}s`, 12, 24);
+        requestAnimationFrame(gLoop);
+      }
+      gLoop();
+    }
+  </script>
+</body>
+</html>
